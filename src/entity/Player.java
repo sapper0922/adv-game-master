@@ -22,6 +22,7 @@ public class Player extends Entity{
     public final int screenY;
     int standCounter = 0;
     public boolean attackCanceled = false;
+    public boolean lightUpdated = false;
 
     public Player(GamePanel gp, KeyHandler keyH) {
 
@@ -133,6 +134,17 @@ public class Player extends Entity{
         right1 = setup("/res/player/boy_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("/res/player/boy_right_2", gp.tileSize, gp.tileSize);
 
+    }
+
+    public void getSleepingImage(BufferedImage image) {
+        up1 = image;
+        up2 = image;
+        down1 = image;
+        down2 = image;
+        left1 = image;
+        left2 = image;
+        right1 = image;
+        right2 = image;
     }
 
     public void getPlayerAttackImage() {
@@ -509,6 +521,15 @@ public class Player extends Entity{
             if(selectedItem.type == type_shield) {
                 currentShield = selectedItem;
                 defence = getDefence();
+            }
+            if(selectedItem.type == type_light) {
+                if(currentLight == selectedItem) {
+                    currentLight = null;
+                }
+                else {
+                    currentLight = selectedItem;
+                }
+                lightUpdated = true;
             }
             if(selectedItem.type == type_consumable) {
                 if(selectedItem.use(this)) {

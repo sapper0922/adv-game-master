@@ -118,6 +118,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int gameOverState = 6;
     public final int transitionState = 7;
     public final int tradeState = 8;
+    public final int sleepState = 9;
 
     public GamePanel() {
 
@@ -267,22 +268,22 @@ public class GamePanel extends JPanel implements Runnable{
 
                 }
             }
+            for(int i = 0; i < particleList.size(); i++) {
+                if(particleList.get(i) != null) {
+                    if(particleList.get(i).alive) {
+                        particleList.get(i).update();
+                    }
+                    if(!particleList.get(i).alive) {
+                        particleList.remove(i);
+                    }
+                }
+            }
             for(int i = 0; i < iTile[1].length; i++) {
                 if(iTile[currentMap][i] != null) {
                     iTile[currentMap][i].update();
                 }
             }
-        }
-        for(int i = 0; i < particleList.size(); i++) {
-            if(particleList.get(i) != null) {
-                if(particleList.get(i).alive) {
-                    particleList.get(i).update();
-                }
-                if(!particleList.get(i).alive) {
-                    particleList.remove(i);
-                }
-
-            }
+            eManager.update();
         }
         if(gameState == pauseState) {
             //nothing
