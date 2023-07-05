@@ -14,7 +14,8 @@ public class KeyHandler implements KeyListener{
      leftPressed = false,
      rightPressed = false,
      enterPressed = false,
-     shotKeyPressed = false;
+     shotKeyPressed = false,
+     spacePressed = false;
 
      //Debug
      boolean showDebugText = false;
@@ -66,6 +67,10 @@ public class KeyHandler implements KeyListener{
         else if(gp.gameState == gp.tradeState) {
             tradeState(code);
         }
+        //Map State
+        else if(gp.gameState == gp.mapState) {
+            mapState(code);
+        }
     }
 
     public void titleState(int code) {
@@ -98,27 +103,18 @@ public class KeyHandler implements KeyListener{
         }
     }
     public void playState(int code) {
-        //checks if W is pressed
         if(code == KeyEvent.VK_W) {
-            //if W is pressed, upPressed will be true
             upPressed = true; 
         }
-        //checks if S is pressed
         if(code == KeyEvent.VK_S) {
-            //if S is pressed, downPressed will be true
             downPressed = true;
         }
-        //checks if A is pressed
         if(code == KeyEvent.VK_A) {
-            //if A is pressed, leftPressed will be true
             leftPressed = true;
         }
-        //chekcs if D is pressed
         if(code == KeyEvent.VK_D) {
-            //if D is pressed, rightPressed will be true
             rightPressed = true;
         }
-        //checks if P is pressed
         if(code == KeyEvent.VK_P) {                
             gp.gameState = gp.pauseState;
         }
@@ -133,6 +129,20 @@ public class KeyHandler implements KeyListener{
         }
         if(code == KeyEvent.VK_ESCAPE) {                
             gp.gameState = gp.optionsState;
+        }
+        if(code == KeyEvent.VK_M) {                
+            gp.gameState = gp.mapState;
+        }
+        if(code == KeyEvent.VK_X) {                
+            if(!gp.map.miniMapOn) {
+                gp.map.miniMapOn = true;
+            }
+            else {
+                gp.map.miniMapOn = false;
+            }
+        }
+        if(code == KeyEvent.VK_SPACE) {                
+            spacePressed = true;
         }
         //Debug
         if(code == KeyEvent.VK_T) {
@@ -238,12 +248,12 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_ENTER) {
             if(gp.ui.commandNum == 0) {
                 gp.gameState = gp.playState;
-                gp.retry();
+                gp.resetGame(false);
                 gp.playMusic(0);
             }
             else if(gp.ui.commandNum == 1) {
                 gp.gameState = gp.titleState;
-                gp.restart();
+                gp.resetGame(true);
             }
         }
     }
@@ -281,6 +291,12 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ESCAPE) {
                 gp.ui.subState = 0;
             }
+        }
+    }
+    public void mapState(int code) {
+
+        if(code == KeyEvent.VK_M) {
+            gp.gameState = gp.playState;
         }
     }
     public void playerInventory(int code) {
@@ -344,23 +360,25 @@ public class KeyHandler implements KeyListener{
         int code = e.getKeyCode();
 
         if(code == KeyEvent.VK_W) {
-            //if W is pressed, upPressed will be false
             upPressed = false;
         }
         if(code == KeyEvent.VK_S) {
-            //if S is pressed, downPressed will be false
             downPressed = false;
         }
         if(code == KeyEvent.VK_A) {
-            //if A is pressed, leftPressed will be false
             leftPressed = false;
         }
         if(code == KeyEvent.VK_D) {
-            //if D is pressed, rightPressed will be false
             rightPressed = false;
         }
         if(code == KeyEvent.VK_F) {                
             shotKeyPressed = false;
+        }
+        if(code == KeyEvent.VK_ENTER) {                
+            enterPressed = false;
+        }
+        if(code == KeyEvent.VK_SPACE) {                
+            spacePressed = false;
         }
         
     }

@@ -20,7 +20,7 @@ public class UI {
     
     GamePanel gp;
     Graphics2D g2;
-    Font arial_40, arial_80B;
+    public Font arial_40, arial_80B;
     BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blank, coin;
     public boolean messageOn = false;
     ArrayList<String> message = new ArrayList<>();
@@ -737,6 +737,7 @@ public class UI {
             if(gp.keyH.enterPressed) {
                 subState = 0;
                 gp.gameState = gp.titleState;
+                gp.resetGame(true);
             }
         }
 
@@ -968,7 +969,7 @@ public class UI {
                 gp.eManager.lighting.dayState = gp.eManager.lighting.day;
                 gp.eManager.lighting.dayCounter = 0;
                 gp.gameState = gp.playState;
-                gp.player.getPlayerImage();
+                gp.player.getImage();
             }
         }
     }

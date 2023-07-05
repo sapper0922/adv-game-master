@@ -49,23 +49,11 @@ public class Player extends Entity{
 
         //Calls setDefaultValues function
         setDefaultValues();
-
-        //Calls getPlayerImage function
-        getPlayerImage();
-
-        //Calls the getPlayerAttackImage that holds the attack images.
-        getPlayerAttackImage();
-
-        setItems();
-
     }
     public void setDefaultValues() {
 
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
-        // worldX = gp.tileSize * 12;
-        // worldY = gp.tileSize * 12;
-        // gp.currentMap = 1;
         defaultSpeed = 4;
 
         //how fast the player character moves in pixels
@@ -88,10 +76,16 @@ public class Player extends Entity{
         coin = 500;
         currentWeapon = new OBJ_Sword_Normal(gp);
         currentShield = new OBJ_Shield_Wood(gp);
+        currentLight = null;
         projectile = new OBJ_Fireball(gp);
         //projectile = new OBJ_Rock(gp);
         attack = getAttack(); // The total attack value is decided by strentgh and weapon
         defence = getDefence(); // The total defence value is decided by dexterity and shield
+
+        getImage();
+        getAttackImage();
+        getGuardImage();
+        setItems();
     }
     public void setDefaultPositions() {
 
@@ -99,23 +93,27 @@ public class Player extends Entity{
         worldY = gp.tileSize * 21;
         direction = "down";
     }
-    public void restoreLifeAndMana() {
+    public void restoreStatus() {
 
         life = maxLife;
         mana = maxMana;
         invincible = false;
+        transparent = false;
+        attacking = false;
+        guarding = false;
+        knockBack = false;
+        lightUpdated = true;
     }
     public void setItems() {
-
         inventory.clear();
         inventory.add(currentWeapon);
         inventory.add(currentShield);
-        inventory.add(new OBJ_Key(gp));
-        
-
+        inventory.add(new OBJ_Key(gp));  
     }
     public int getAttack() {
         attackArea = currentWeapon.attackArea;
+        motion1_duration = currentWeapon.motion1_duration;
+        motion2_duration = currentWeapon.motion2_duration;
         return attack = strength * currentWeapon.attackValue;
     }
     public int getDefence() {
@@ -123,8 +121,7 @@ public class Player extends Entity{
     }
 
     //Images for up1, up2, down1, down2, left1, left2, right1, right2.
-    public void getPlayerImage() {
-
+    public void getImage() {
         up1 = setup("/res/player/boy_up_1", gp.tileSize, gp.tileSize);
         up2 = setup("/res/player/boy_up_2", gp.tileSize, gp.tileSize);
         down1 = setup("/res/player/boy_down_1", gp.tileSize, gp.tileSize);
@@ -135,7 +132,6 @@ public class Player extends Entity{
         right2 = setup("/res/player/boy_right_2", gp.tileSize, gp.tileSize);
 
     }
-
     public void getSleepingImage(BufferedImage image) {
         up1 = image;
         up2 = image;
@@ -146,38 +142,82 @@ public class Player extends Entity{
         right1 = image;
         right2 = image;
     }
-
-    public void getPlayerAttackImage() {
+    public void getAttackImage() {
 
         if(currentWeapon.type == type_sword) {
             attackUp1 = setup("/res/player/boy_attack_up_1", gp.tileSize, gp.tileSize*2);
-        attackUp2 = setup("/res/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
-        attackDown1 = setup("/res/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
-        attackDown2 = setup("/res/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
-        attackLeft1 = setup("/res/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
-        attackLeft2 = setup("/res/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
-        attackRight1 = setup("/res/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);
-        attackRight2 = setup("/res/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
+            attackUp2 = setup("/res/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
+            attackDown1 = setup("/res/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
+            attackDown2 = setup("/res/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
+            attackLeft1 = setup("/res/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
+            attackLeft2 = setup("/res/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
+            attackRight1 = setup("/res/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);
+            attackRight2 = setup("/res/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
         }
         if(currentWeapon.type == type_axe) {
             attackUp1 = setup("/res/player/boy_axe_up_1", gp.tileSize, gp.tileSize*2);
-        attackUp2 = setup("/res/player/boy_axe_up_2", gp.tileSize, gp.tileSize*2);
-        attackDown1 = setup("/res/player/boy_axe_down_1", gp.tileSize, gp.tileSize*2);
-        attackDown2 = setup("/res/player/boy_axe_down_2", gp.tileSize, gp.tileSize*2);
-        attackLeft1 = setup("/res/player/boy_axe_left_1", gp.tileSize*2, gp.tileSize);
-        attackLeft2 = setup("/res/player/boy_axe_left_2", gp.tileSize*2, gp.tileSize);
-        attackRight1 = setup("/res/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);
-        attackRight2 = setup("/res/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
+            attackUp2 = setup("/res/player/boy_axe_up_2", gp.tileSize, gp.tileSize*2);
+            attackDown1 = setup("/res/player/boy_axe_down_1", gp.tileSize, gp.tileSize*2);
+            attackDown2 = setup("/res/player/boy_axe_down_2", gp.tileSize, gp.tileSize*2);
+            attackLeft1 = setup("/res/player/boy_axe_left_1", gp.tileSize*2, gp.tileSize);
+            attackLeft2 = setup("/res/player/boy_axe_left_2", gp.tileSize*2, gp.tileSize);
+            attackRight1 = setup("/res/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);
+            attackRight2 = setup("/res/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
         }
         
     }
-
+    public void getGuardImage() {
+        guardUp = setup("/res/player/boy_guard_up", gp.tileSize, gp.tileSize);
+        guardDown = setup("/res/player/boy_guard_down", gp.tileSize, gp.tileSize);
+        guardLeft = setup("/res/player/boy_guard_left", gp.tileSize, gp.tileSize);
+        guardRight = setup("/res/player/boy_guard_right", gp.tileSize, gp.tileSize);
+    }
     public void update() {
         
-        if(attacking == true) {
-            attacking();
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+        //Check Object Collision
+        gp.cChecker.checkObject(this, true);
+        //Check Npc Collision
+        gp.cChecker.checkEntity(this, gp.npc);
+        //Check Monster Collision
+        gp.cChecker.checkEntity(this, gp.monster);
+
+        //Check interactive tile collision
+        gp.cChecker.checkEntity(this, gp.iTile);        
+
+        //This is setting the knockback system
+        if(knockBack == true) {
+
+            if(collisionOn) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
+            else if(!collisionOn) {
+                switch(knockBackDirection) {
+                case "up": worldY -= speed; break;
+                case "down": worldY += speed; break;
+                case "left": worldX -= speed; break;
+                case "right": worldX += speed; break; 
+                }
+            }
+
+            knockBackCounter++;
+            if(knockBackCounter == 10) {
+                knockBackCounter = 0;
+                knockBack = false;
+                speed = defaultSpeed;
+            }
         }
 
+        else if(attacking == true) {
+            attacking();
+        }
+        else if(keyH.spacePressed == true) {
+            guarding = true;
+            guardCounter++;
+        }
         //This if statement checks if the animiation of the player only happenes when you are pushing w, a, s, d.
         else if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true) {
             //if W key pressed the direction will be set to up.
@@ -237,6 +277,8 @@ public class Player extends Entity{
 
             attackCanceled = false;
             gp.keyH.enterPressed = false;
+            guarding = false;
+            guardCounter = 0;
 
             spriteCounter++;
             
@@ -258,6 +300,8 @@ public class Player extends Entity{
                 spriteNum = 1;
                 standCounter = 0;
             }
+            guarding = false;
+            guardCounter = 0;
         }
 
         if(gp.keyH.shotKeyPressed && !projectile.alive && shotAvailableCounter == 30 && projectile.haveResource(this)) {
@@ -282,10 +326,11 @@ public class Player extends Entity{
         }
 
         //This needs to be outside of key if statement
-        if(invincible) {
+        if(invincible == true) {
             invincibleCounter++;
             if(invincibleCounter >= 60) {
                 invincible = false;
+                transparent = false;
                 invincibleCounter = 0;
             }
         }
@@ -304,58 +349,6 @@ public class Player extends Entity{
             gp.stopMusic();
             gp.playSE(12);
         }
-    }
-
-    public void attacking() {
-
-        spriteCounter++;
-
-        if(spriteCounter <= 5) {
-            spriteNum = 1;
-        }
-        if(spriteCounter > 5 && spriteCounter <= 25) {
-            spriteNum = 2;
-
-            //Save the current worldX, worldY, and solidArea
-            int currentWorldX = worldX;
-            int currentWorldY = worldY;
-            int solidAreaWidth = solidArea.width;
-            int solidAreaHeight = solidArea.height;
-
-            //Adjust player's worldX/Y for the attackArea
-            switch(direction) {
-                case "up": worldY -= attackArea.height; break;
-                case "down": worldY += attackArea.height; break;
-                case "left": worldX -= attackArea.height; break;
-                case "right": worldX += attackArea.height; break;
-            }
-
-            //attackArea becomes solidArea
-            solidArea.width = attackArea.width;
-            solidArea.height = attackArea.height;
-
-            //Check monster collision with the updated worldX, worldY, and solidArea
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-            damageMonster(monsterIndex, attack, currentWeapon.knockBackPower);
-
-            int iTileIndex = gp.cChecker.checkEntity(this,gp.iTile);
-            damageInteractiveTile(iTileIndex);
-
-            int projectileIndex = gp.cChecker.checkEntity(this, gp.projectile);
-            damageProjectile(projectileIndex);
-
-            //After checking collision, restores the original data
-            worldX = currentWorldX;
-            worldY = currentWorldY;
-            solidArea.width = solidAreaWidth;
-            solidArea.height = solidAreaHeight;
-        }
-        if(spriteCounter > 25) {
-            spriteNum = 1;
-            spriteCounter = 0;
-            attacking = false;
-        }
-
     }
 
     //checks if player picked up a key and uses the key
@@ -413,31 +406,35 @@ public class Player extends Entity{
 
                 //Setting damage variable which controls how much life to take away depending on attack and defence
                 int damage = gp.monster[gp.currentMap][i].attack - defence;
-                if(damage < 0) {
-                    damage = 0;
+                if(damage < 1) {
+                    damage = 1;
                 }
 
                 life -= damage;
                 invincible = true;
+                transparent = true;
             }
         }
     }
 
-    public void damageMonster(int i, int attack, int knockBackPower) {
+    public void damageMonster(int i, Entity attacker, int attack, int knockBackPower) {
 
         if(i != 999) {
             if(!gp.monster[gp.currentMap][i].invincible) {
                 gp.playSE(5);
 
                 if(knockBackPower > 0) {
-                    knockBack(gp.monster[gp.currentMap][i], knockBackPower);
+                    setKnockBack(gp.monster[gp.currentMap][i], attacker, knockBackPower);
                 }
-                knockBack(gp.monster[gp.currentMap][i], knockBackPower);
+
+                if(gp.monster[gp.currentMap][i].offBalance == true) {
+                    attack *= 5;
+                }
 
                 //Setting damage variable which controls how much life to take away depending on attack and defence
                 int damage = attack - gp.monster[gp.currentMap][i].defence;
-                if(damage < 0) {
-                    damage = 0;
+                if(damage < 1) {
+                    damage = 1;
                 }
                 gp.monster[gp.currentMap][i].life -= damage;
                 gp.ui.addMessage(damage + " damage! ");
@@ -454,13 +451,6 @@ public class Player extends Entity{
                 }
             }
         }
-    }
-    public void knockBack(Entity entity, int knockBackPower) {
-
-        entity.direction = direction;
-        entity.speed += knockBackPower;
-        entity.knockBack = true;
-
     }
     public void damageInteractiveTile(int i) {
 
@@ -516,7 +506,7 @@ public class Player extends Entity{
             if(selectedItem.type == type_sword || selectedItem.type == type_axe) {
                 currentWeapon = selectedItem;
                 attack = getAttack();
-                getPlayerAttackImage();
+                getAttackImage();
             }
             if(selectedItem.type == type_shield) {
                 currentShield = selectedItem;
@@ -602,6 +592,9 @@ public class Player extends Entity{
             if(spriteNum == 1) { image = attackUp1; }
             if(spriteNum == 2) { image = attackUp2; }
         }
+        if(guarding == true) {
+            image = guardUp;
+        }
             break;
         //if direction is down the image will change from down2 and down2
         case "down":
@@ -612,6 +605,9 @@ public class Player extends Entity{
             if(attacking == true) {
                 if(spriteNum == 1) { image = attackDown1; }
                 if(spriteNum == 2) { image = attackDown2; }
+            }
+            if(guarding == true) {
+                image = guardDown;
             }
             break;
         //if direction is left the image will change from left1 and left2
@@ -625,8 +621,10 @@ public class Player extends Entity{
                 if(spriteNum == 1) { image = attackLeft1; }
                 if(spriteNum == 2) { image = attackLeft2; }
             }
+            if(guarding == true) {
+                image = guardLeft;
+            }
             break;
-        //if direction is right the image will change from right1 and right2
         case "right":
             if(attacking == false) {
                 if(spriteNum == 1) { image = right1; }
@@ -636,10 +634,13 @@ public class Player extends Entity{
                 if(spriteNum == 1) { image = attackRight1; }
                 if(spriteNum == 2) { image = attackRight2; }
             }
+            if(guarding == true) {
+                image = guardRight;
+            }
             break;
         }
 
-        if(invincible) {
+        if(transparent == true) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
         }
 

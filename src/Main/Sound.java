@@ -34,6 +34,8 @@ public class Sound {
         soundURL[12] = getClass().getResource("/res/sound/gameover.wav");
         soundURL[13] = getClass().getResource("/res/sound/stairs.wav");
         soundURL[14] = getClass().getResource("/res/sound/sleep.wav");
+        soundURL[15] = getClass().getResource("/res/sound/blocked.wav");
+        soundURL[16] = getClass().getResource("/res/sound/parry.wav");
 
 
     }
@@ -42,7 +44,7 @@ public class Sound {
     public void setFile(int i) {
 
         try {
-
+            
             //This is a format to open an audio file in java
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();

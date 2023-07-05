@@ -34,8 +34,14 @@ public class CollisionChecker {
 
         int tileNum1, tileNum2;
 
+        // Use a temporal direction when it's being knockbacked
+        String direction = entity.direction;
+        if(entity.knockBack) {
+            direction = entity.knockBackDirection;
+        }
+
         //Adds the collision in the direction up, down, left, and right
-        switch(entity.direction) {    
+        switch(direction) {    
         case "up":
             //use the speed to predict where the player is going to be next frame
             entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
@@ -89,6 +95,11 @@ public class CollisionChecker {
 
         int index = 999;
 
+        String direction = entity.direction;
+        if(entity.knockBack) {
+            direction = entity.knockBackDirection;
+        }
+
         for(int i = 0; i < gp.obj[1].length; i++) {
 
             if(gp.obj[gp.currentMap][i] != null) {
@@ -102,7 +113,7 @@ public class CollisionChecker {
                 gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].solidArea.y;
 
                 //checks where entity or player will be after they move
-                switch(entity.direction) {
+                switch(direction) {
                     case "up": entity.solidArea.y -= entity.speed; break;
                     case "down": entity.solidArea.y += entity.speed; break;
                     case "left": entity.solidArea.x -= entity.speed; break;
@@ -137,6 +148,12 @@ public class CollisionChecker {
 
         int index = 999;
 
+        // Use a temporal direction when it's being knockbacked
+        String direction = entity.direction;
+        if(entity.knockBack) {
+            direction = entity.knockBackDirection;
+        }
+
         for(int i = 0; i < target[1].length; i++) {
 
             if(target[gp.currentMap][i] != null) {
@@ -150,7 +167,7 @@ public class CollisionChecker {
                 target[gp.currentMap][i].solidArea.y = target[gp.currentMap][i].worldY + target[gp.currentMap][i].solidArea.y;
 
                 //checks where entity or player will be after they move
-                switch(entity.direction) {
+                switch(direction) {
                     case "up": entity.solidArea.y -= entity.speed; break;
                     case "down": entity.solidArea.y += entity.speed; break;
                     case "left": entity.solidArea.x -= entity.speed; break;
