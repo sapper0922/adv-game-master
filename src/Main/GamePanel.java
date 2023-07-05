@@ -3,11 +3,13 @@ package Main;
 import javax.swing.JPanel;
 
 import ai.PathFinder;
+import data.SaveLoad;
 import entity.Entity;
 import entity.Player;
 import environment.EnvironmentManager;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
+import tile.Map;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -91,6 +93,10 @@ public class GamePanel extends JPanel implements Runnable{
 
     EnvironmentManager eManager = new EnvironmentManager(this);
 
+    Map map = new Map(this);
+
+    SaveLoad saveLoad = new SaveLoad(this);
+
     //Creates a variable called gameThread that has all the functions the Thread has
     Thread gameThread;
 
@@ -119,6 +125,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int transitionState = 7;
     public final int tradeState = 8;
     public final int sleepState = 9;
+    public final int mapState = 10;
 
     public GamePanel() {
 
@@ -157,21 +164,18 @@ public class GamePanel extends JPanel implements Runnable{
             setFullScreen();
         }
     }
-    public void retry() {
-
+    public void resetGame(boolean restart) {
         player.setDefaultPositions();
-        player.restoreLifeAndMana();
+        player.restoreStatus();
         aSetter.setNPC();
         aSetter.setMonster();
-    }
-    public void restart() {
 
-        player.setDefaultValues();
-        player.setDefaultPositions();
-        aSetter.setObject();
-        aSetter.setNPC();
-        aSetter.setMonster();
-        aSetter.setInteractiveTile();
+        if(restart == true) {
+            player.setDefaultValues();
+            aSetter.setObject();
+            aSetter.setInteractiveTile();
+            eManager.lighting.resetDay();
+        } 
     }
     public void setFullScreen() {
 
@@ -300,10 +304,10 @@ public class GamePanel extends JPanel implements Runnable{
 
         //TITLE SCREEN
         if(gameState == titleState) {
-
             ui.draw(g2);
-            
-
+        }
+        else if(gameState == mapState) {
+            map.drawFullMapScreen(g2);
         }
         //OTHERS
         else {
@@ -370,6 +374,9 @@ public class GamePanel extends JPanel implements Runnable{
 
             //Draws the enviroment
             eManager.draw(g2);
+
+            //Draws the mini map
+            map.drawMiniMap(g2);
 
             //Draws the ui on the screen
             ui.draw(g2);
