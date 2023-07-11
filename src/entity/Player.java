@@ -86,6 +86,7 @@ public class Player extends Entity{
         getAttackImage();
         getGuardImage();
         setItems();
+        setDialogue();
     }
     public void setDefaultPositions() {
 
@@ -93,10 +94,16 @@ public class Player extends Entity{
         worldY = gp.tileSize * 21;
         direction = "down";
     }
+    public void setDialogue() {
+
+        dialogues[0][0] = "You are level " + level + " now!\n" 
+                + "You feel stronger!";
+    }
     public void restoreStatus() {
 
         life = maxLife;
         mana = maxMana;
+        speed = defaultSpeed;
         invincible = false;
         transparent = false;
         attacking = false;
@@ -109,6 +116,7 @@ public class Player extends Entity{
         inventory.add(currentWeapon);
         inventory.add(currentShield);
         inventory.add(new OBJ_Key(gp));  
+        inventory.add(new OBJ_Key(gp)); 
     }
     public int getAttack() {
         attackArea = currentWeapon.attackArea;
@@ -118,6 +126,24 @@ public class Player extends Entity{
     }
     public int getDefence() {
         return defence = dexterity * currentShield.defenceValue;
+    }
+    public int getCurrentWeaponSlot() {
+        int currentWeaponSlot = 0;
+        for(int i = 0; i < inventory.size(); i++) {
+            if(inventory.get(i) == currentWeapon) {
+                currentWeaponSlot = i;
+            }
+        }
+        return currentWeaponSlot;
+    }
+    public int getCurrentShieldSlot() {
+        int CurrentShieldSlot = 0;
+        for(int i = 0; i < inventory.size(); i++) {
+            if(inventory.get(i) == currentShield) {
+                CurrentShieldSlot = i;
+            }
+        }
+        return CurrentShieldSlot;
     }
 
     //Images for up1, up2, down1, down2, left1, left2, right1, right2.
@@ -392,7 +418,6 @@ public class Player extends Entity{
 
             if(i != 999) {
                 attackCanceled = true;
-                gp.gameState = gp.dialogueState;
                 gp.npc[gp.currentMap][i].speak();
             }  
         }
@@ -489,8 +514,8 @@ public class Player extends Entity{
 
             gp.playSE(8);
             gp.gameState = gp.dialogueState;
-            gp.ui.currentDialogue = "You are level " + level + " now!\n" 
-                + "You feel stronger!";
+            setDialogue();
+            startDialogue(this,0);
 
         }
     }
@@ -549,10 +574,12 @@ public class Player extends Entity{
 
         boolean canObtain = false;
 
-        //Check if stackable
-        if(item.stackable) {
+        Entity newItem = gp.eGenerator.getObject(item.name);
 
-            int index = searchItemInInventory(item.name);
+        //Check if stackable
+        if(newItem.stackable) {
+
+            int index = searchItemInInventory(newItem.name);
 
             if(index != 999) {
                 inventory.get(index).amount++;
@@ -560,14 +587,14 @@ public class Player extends Entity{
             }
             else { //New item
                 if(inventory.size() != maxInventorySize) {
-                    inventory.add(item);
+                    inventory.add(newItem);
                     canObtain = true;
                 }
             }
         }
         else { //Not stackable
             if(inventory.size() != maxInventorySize) {
-                inventory.add(item);
+                inventory.add(newItem);
                 canObtain = true;
             }
         }

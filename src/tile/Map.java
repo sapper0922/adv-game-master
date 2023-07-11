@@ -25,6 +25,10 @@ public class Map extends TileManager{
 
         for(int i = 0; i < gp.maxMap; i++) {
 
+            if(i == 1) {
+                i = 2;
+            }
+
             worldMap[i] = new BufferedImage(worldMapWidth, worldMapHeight, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = (Graphics2D)worldMap[i].createGraphics();
 
@@ -36,6 +40,7 @@ public class Map extends TileManager{
                 int tileNum = mapTileNum[i][col][row];
                 int x = gp.tileSize * col;
                 int y = gp.tileSize * row;
+                
                 g2.drawImage(tile[tileNum].image, x, y, null);
 
                 col++;

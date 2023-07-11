@@ -5,11 +5,13 @@ import Main.GamePanel;
 
 public class OBJ_Axe extends Entity {
 
+    public static final String objName = "Woodcutter's Axe";
+
     public OBJ_Axe(GamePanel gp) {
         super(gp);
         
         type = type_axe;
-        name = "Woodcutter's Axe";
+        name = objName;
         down1 = setup("/res/objects/axe",gp.tileSize,gp.tileSize);
         attackValue = 2;
         attackArea.width = 30;

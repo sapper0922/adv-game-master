@@ -7,6 +7,8 @@ import Main.GamePanel;
 public class OBJ_Door extends Entity{
 
     GamePanel gp;
+    public static final String objName = "Door";
+
     //try to make of door image and catch is printStackTrace
     public OBJ_Door(GamePanel gp) {
 
@@ -14,7 +16,7 @@ public class OBJ_Door extends Entity{
         this.gp = gp;
 
         type = type_obstacle;
-        name = "Door";
+        name = objName;
         down1 = setup("/res/objects/door", gp.tileSize, gp.tileSize);
         collision = true;
 
@@ -25,10 +27,14 @@ public class OBJ_Door extends Entity{
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
+        setDialogue();
+    }
+    public void setDialogue() {
+
+        dialogues[0][0] = "You need a key to open this.";
     }
     public void interact() {
 
-        gp.gameState = gp.dialogueState;
-        gp.ui.currentDialogue = "You need a key to open this.";
+        startDialogue(this,0);
     }
 }

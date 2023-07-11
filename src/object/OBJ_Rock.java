@@ -6,14 +6,16 @@ import Main.GamePanel;
 import java.awt.Color;
 
 public class OBJ_Rock extends Projectile{
+
     GamePanel gp;
+    public static final String objName = "Rock";
 
     public OBJ_Rock(GamePanel gp) {
         super(gp);
         this.gp = gp;
 
         // Setting Attributes.
-        name = "Rock";
+        name = objName;
         speed = 8;
         maxLife = 80;
         life = maxLife;

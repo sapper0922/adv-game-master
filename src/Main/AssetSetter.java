@@ -74,7 +74,8 @@ public class AssetSetter {
         gp.obj[mapNum][i].worldX = gp.tileSize*12;
         gp.obj[mapNum][i].worldY = gp.tileSize*12;
         i++;
-        gp.obj[mapNum][i] = new OBJ_Chest(gp,new OBJ_Key(gp));
+        gp.obj[mapNum][i] = new OBJ_Chest(gp);
+        gp.obj[mapNum][i].setLoot(new OBJ_Key(gp));
         gp.obj[mapNum][i].worldX = gp.tileSize*30;
         gp.obj[mapNum][i].worldY = gp.tileSize*29;
         i++;
@@ -126,10 +127,10 @@ public class AssetSetter {
         gp.monster[mapNum][i].worldX = gp.tileSize*38;
         gp.monster[mapNum][i].worldY = gp.tileSize*42;
         i++;
-        gp.monster[mapNum][i] = new MON_Orc(gp);
-        gp.monster[mapNum][i].worldX = gp.tileSize*12;
-        gp.monster[mapNum][i].worldY = gp.tileSize*33;
-        i++;
+        // gp.monster[mapNum][i] = new MON_Orc(gp);
+        // gp.monster[mapNum][i].worldX = gp.tileSize*12;
+        // gp.monster[mapNum][i].worldY = gp.tileSize*33;
+        // i++;
 
     }
     public void setInteractiveTile() {
