@@ -1,43 +1,48 @@
 package tile_interactive;
 
-import entity.Entity;
-import Main.GamePanel;
 import java.awt.Color;
+import java.util.Random;
 
-public class IT_DryTree extends InteractiveTile{
+import Main.GamePanel;
+import entity.Entity;
+import object.OBJ_Coin_Bronze;
+import object.OBJ_Heart;
+import object.OBJ_ManaCrystal;
+
+public class IT_DestructibleWall extends InteractiveTile{
 
     GamePanel gp;
 
-    public IT_DryTree(GamePanel gp, int col, int row) {
+    public IT_DestructibleWall(GamePanel gp, int col, int row) {
         super(gp,col,row);
         this.gp = gp;
 
         this.worldX = gp.tileSize * col;
         this.worldY = gp.tileSize * row;
 
-        down1 = setup("/res/tiles_interactive/drytree",gp.tileSize,gp.tileSize);
+        down1 = setup("/res/tiles_interactive/destructiblewall",gp.tileSize,gp.tileSize);
         destructible = true;
-        life = 1;
+        life = 3;
     }
     public boolean isCorrectItem(Entity entity) {
         boolean isCorrectItem = false;
 
-        if(entity.currentWeapon.type == type_axe) {
+        if(entity.currentWeapon.type == type_pickaxe) {
             isCorrectItem = true;
         }
 
         return isCorrectItem;
     }
     public void playSE() {
-        gp.playSE(11);
+        gp.playSE(20);
     }
 
     public InteractiveTile getDestroyedForm() {
-        InteractiveTile tile = new IT_Trunk(gp, worldX/gp.tileSize, worldY/gp.tileSize);
+        InteractiveTile tile = null;
         return tile;
     }
     public Color getParticleColor() {
-        Color color = new Color(65,65,65);
+        Color color = new Color(65,50,30);
         return color;
     }
     public int getParticleSize() {

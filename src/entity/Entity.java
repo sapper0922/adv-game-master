@@ -30,6 +30,8 @@ public class Entity {
 
     public Entity attacker;
 
+    public Entity linkedEntity;
+
     //State
     public int worldX, worldY;
     public String direction = "down";
@@ -113,6 +115,7 @@ public class Entity {
     public final int type_pickupOnly = 7;
     public final int type_obstacle = 8;
     public final int type_light = 9;
+    public final int type_pickaxe = 10;
 
     public Entity(GamePanel gp) {
         this.gp = gp;
@@ -169,6 +172,7 @@ public class Entity {
     }
     public void setLoot(Entity loot) {}
     public void setAction() {}
+    public void move(String direction) {}
     public void damageReaction() {}
     public void speak() {}
     public void facePlayer() {

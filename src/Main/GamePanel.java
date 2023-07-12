@@ -107,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     //Instantiate SuperObject class
     public Entity obj[][] = new Entity[maxMap][20];
-    public Entity npc[] []= new Entity[maxMap][10];
+    public Entity npc[] []= new Entity[maxMap][1000];
     public Entity monster[][] = new Entity[maxMap][20];
     public InteractiveTile iTile[][] = new InteractiveTile[maxMap][50];
     public Entity projectile[][] = new Entity[maxMap][20];
@@ -456,6 +456,8 @@ public class GamePanel extends JPanel implements Runnable{
             if(nextArea == dungeon) {
                 playMusic(19);
             }
+
+            aSetter.setNPC();
         }
 
         currentArea = nextArea;

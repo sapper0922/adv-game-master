@@ -31,7 +31,7 @@ public class Lighting {
         Graphics2D g2 = (Graphics2D)draknesFilter.getGraphics();
 
         if(gp.player.currentLight == null) {
-            g2.setColor(new Color(0,0,0.1f,0.995f));
+            g2.setColor(new Color(0,0,0.1f,0.95f));
         }
         else {   
         // Gets the center x and y of the screen
@@ -46,7 +46,7 @@ public class Lighting {
         color[1] = new Color(0,0,0.1f,0.25f);
         color[2] = new Color(0,0,0.1f,0.5f);
         color[3] = new Color(0,0,0.1f,0.75f);
-        color[4] = new Color(0,0,0.1f,0.995f);
+        color[4] = new Color(0,0,0.1f,0.95f);
 
         fraction[0] = 0f;
         fraction[1] = 0.25f;
