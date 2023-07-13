@@ -235,7 +235,6 @@ public class UI {
         y += gp.tileSize;
         g2.drawString(text, x, y);
         if(commandNum == 1) {
-            System.out.println("h");
             g2.drawString(">", x-gp.tileSize, y);
         }
 

@@ -52,6 +52,7 @@ public class Player extends Entity{
     }
     public void setDefaultValues() {
 
+        gp.currentMap = 0;
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
         defaultSpeed = 4;
@@ -69,7 +70,7 @@ public class Player extends Entity{
         maxMana = 4;
         mana = maxMana;
         ammo = 10;
-        strength = 1; //More strength means he does more damage
+        strength = 20; //More strength means he does more damage
         dexterity = 1; // More dexterity means he recieves less damage
         exp = 0;
         nextLevelExp = 5;
@@ -90,6 +91,7 @@ public class Player extends Entity{
     }
     public void setDefaultPositions() {
 
+        gp.currentMap = 0;
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
         direction = "down";
@@ -379,11 +381,13 @@ public class Player extends Entity{
         if(mana > maxMana) {
             mana = maxMana;
         }
-        if(life <= 0) {
-            gp.gameState = gp.gameOverState;
-            gp.ui.commandNum = -1;
-            gp.stopMusic();
-            gp.playSE(12);
+        if(keyH.godModeOn == false) {
+            if(life <= 0) {
+                gp.gameState = gp.gameOverState;
+                gp.ui.commandNum = -1;
+                gp.stopMusic();
+                gp.playSE(12);
+            }
         }
     }
 
@@ -470,9 +474,6 @@ public class Player extends Entity{
 
                 //Setting damage variable which controls how much life to take away depending on attack and defence
                 int damage = attack - gp.monster[gp.currentMap][i].defence;
-                if(damage < 1) {
-                    damage = 1;
-                }
                 gp.monster[gp.currentMap][i].life -= damage;
                 gp.ui.addMessage(damage + " damage! ");
 

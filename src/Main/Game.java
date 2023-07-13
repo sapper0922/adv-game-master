@@ -14,7 +14,7 @@ public class Game {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Sets window Resizable to false
-        window.setResizable(false);
+        window.setResizable(true);
 
         //Sets the Title of the window
         window.setTitle("2d Adventure.");
