@@ -3,8 +3,10 @@ package monster;
 import java.util.Random;
 
 import Main.GamePanel;
+import data.Progress;
 import entity.Entity;
 import object.OBJ_Coin_Bronze;
+import object.OBJ_Door_Iron;
 import object.OBJ_Heart;
 import object.OBJ_ManaCrystal;
 
@@ -19,15 +21,17 @@ public class MON_SkeletonLord extends Entity{
         this.gp = gp;
         
         type = type_monster;
+        boss = true;
         name = monName;
         defaultSpeed = 1;
         speed = defaultSpeed;
-        maxLife = 50;
+        maxLife = 100;
         life = maxLife;
-        attack = 10;
-        defence = 2;
+        attack = 20;
+        defence = 5;
         exp = 50;
         knockBackPower = 5;
+        sleep = true;
 
         int size = gp.tileSize*5;
         solidArea.x = 48;
@@ -44,7 +48,7 @@ public class MON_SkeletonLord extends Entity{
 
         getImage();
         getAttackImage();
-
+        setDialogue();
     }
 
     public void getImage() {
@@ -98,6 +102,12 @@ public class MON_SkeletonLord extends Entity{
             attackRight2 = setup("/res/monster/skeletonlord_phase2_attack_right_2", gp.tileSize*i*2, gp.tileSize*i);  
         }
     }
+    public void setDialogue() {
+
+        dialogues[0][0] = "No one can steal my treasure!";
+        dialogues[0][1] = "You will die here!";
+        dialogues[0][2] = "WELCOME TO YOU DOOM!!!";
+    }
     public void setAction() {
 
         if(inRage == false && life < maxLife/2) {
@@ -117,7 +127,7 @@ public class MON_SkeletonLord extends Entity{
         }
 
         // Check if it attacks
-        if(!attacking) {
+        if(attacking == false) {
             checkAttackOrNot(60, gp.tileSize*7, gp.tileSize*5);
         }
     }
@@ -126,6 +136,22 @@ public class MON_SkeletonLord extends Entity{
         actionLockCounter = 0;
     }
     public void checkDrop() {
+
+        
+        gp.bossBattleOn = false;
+        Progress.skeletonLordDefeated = true;
+
+        // Restore the previous music
+        gp.stopMusic();
+        gp.playMusic(19);
+
+        // Remove the iron doors
+        for(int i = 0; i < gp.obj[1].length; i++) {
+            if(gp.obj[gp.currentMap][i] != null && gp.obj[gp.currentMap][i].name.equals(OBJ_Door_Iron.objName)) {
+                gp.playSE(21);
+                gp.obj[gp.currentMap][i] = null;
+            }
+        }
 
         // Cast a die
         int i = new Random().nextInt(100)+1;

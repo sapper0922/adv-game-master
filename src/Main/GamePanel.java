@@ -99,6 +99,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     public EntityGenerator eGenerator = new EntityGenerator(this);
 
+    public CutsceneManager csManager = new CutsceneManager(this);
+
     //Creates a variable called gameThread that has all the functions the Thread has
     Thread gameThread;
 
@@ -128,6 +130,10 @@ public class GamePanel extends JPanel implements Runnable{
     public final int tradeState = 8;
     public final int sleepState = 9;
     public final int mapState = 10;
+    public final int cutSceneState = 11;
+
+    // Other
+    public boolean bossBattleOn = false;
 
     // Area
     public int currentArea;
@@ -176,7 +182,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
     public void resetGame(boolean restart) {
 
+        stopMusic();
         currentArea = outside;
+        removeTempEntity();
+        bossBattleOn = false;
         player.setDefaultPositions();
         player.restoreStatus();
         player.resetCounter();
@@ -367,29 +376,29 @@ public class GamePanel extends JPanel implements Runnable{
             }
             //SORT
             Collections.sort(entityList, new Comparator<Entity>() {
-
                 @Override
                 public int compare(Entity e1, Entity e2) {
                     int result = Integer.compare(e1.worldY, e2.worldY);
                     return result;
                 }
-
             });
 
             //Draw Entityies
             for(int i = 0; i < entityList.size(); i++) {
                 entityList.get(i).draw(g2);
             }
+
             //Empty Entity List
-            for(int i = 0; i < entityList.size(); i++) {
-                entityList.remove(i);
-            }
+            entityList.clear();
 
             //Draws the enviroment
             eManager.draw(g2);
 
             //Draws the mini map
             map.drawMiniMap(g2);
+
+            // Draw the cutscene
+            csManager.draw(g2);
 
             //Draws the ui on the screen
             ui.draw(g2);
@@ -463,5 +472,16 @@ public class GamePanel extends JPanel implements Runnable{
 
         currentArea = nextArea;
         aSetter.setMonster();
+    }
+    public void removeTempEntity() {
+
+        for(int mapNum = 0; mapNum < maxMap; mapNum++) {
+
+            for(int i = 0; i < obj[1].length; i++) {
+                if(obj[mapNum][i] != null && obj[mapNum][i].temp == true) {
+                    obj[mapNum][i] = null;
+                }
+            }
+        }
     }
 }

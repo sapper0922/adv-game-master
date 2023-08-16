@@ -47,7 +47,7 @@ public class Player extends Entity{
         // attackArea.width = 36;
         // attackArea.height = 36;
 
-        //Calls setDefaultValues function
+        // Calls setDefaultValues function
         setDefaultValues();
     }
     public void setDefaultValues() {
@@ -57,10 +57,10 @@ public class Player extends Entity{
         worldY = gp.tileSize * 21;
         defaultSpeed = 4;
 
-        //how fast the player character moves in pixels
+        // how fast the player character moves in pixels
         speed = defaultSpeed;
 
-        //direction the player is facing
+        // direction the player is facing
         direction = "down";
 
         //PLAYER STATUS
@@ -70,7 +70,7 @@ public class Player extends Entity{
         maxMana = 4;
         mana = maxMana;
         ammo = 10;
-        strength = 20; //More strength means he does more damage
+        strength = 1; // More strength means he does more damage
         dexterity = 1; // More dexterity means he recieves less damage
         exp = 0;
         nextLevelExp = 5;
@@ -124,7 +124,7 @@ public class Player extends Entity{
         attackArea = currentWeapon.attackArea;
         motion1_duration = currentWeapon.motion1_duration;
         motion2_duration = currentWeapon.motion2_duration;
-        return attack = strength * currentWeapon.attackValue;
+        return attack = strength + currentWeapon.attackValue;
     }
     public int getDefence() {
         return defence = dexterity * currentShield.defenceValue;
@@ -474,6 +474,9 @@ public class Player extends Entity{
 
                 //Setting damage variable which controls how much life to take away depending on attack and defence
                 int damage = attack - gp.monster[gp.currentMap][i].defence;
+                if(damage < 0) {
+                    damage = 0;
+                }
                 gp.monster[gp.currentMap][i].life -= damage;
                 gp.ui.addMessage(damage + " damage! ");
 
@@ -518,7 +521,7 @@ public class Player extends Entity{
     public void checkLevelUp() {
         if(exp >= nextLevelExp) {
             level++;
-            nextLevelExp = nextLevelExp*2;
+            nextLevelExp = nextLevelExp + 5;
             maxLife += 2;
             strength++;
             dexterity++;
@@ -683,9 +686,11 @@ public class Player extends Entity{
         if(transparent == true) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
         }
+        if(drawing == true) {
+            //draws image on the screen, since screenX and screenY is final variable he doesn't change location on the screen(final variable cannot be changed unless you change it in the variable decleration)
+            g2.drawImage(image, tempScreenX, tempScreenY, null);
+        }
 
-        //draws image on the screen, since screenX and screenY is final variable he doesn't change location on the screen(final variable cannot be changed unless you change it in the class)
-        g2.drawImage(image, tempScreenX, tempScreenY, null);
 
         //Reset Alpha
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
